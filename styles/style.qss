@@ -1,0 +1,70 @@
+#centralWidget { background: rgba(32, 80, 96, 100); }
+
+#centralWidget {
+  background-color: qlineargradient(spread:reflect, x1:0.5,
+  y1:0, x2:0, y2:0, stop:0 rgba(91, 204, 233, 100), stop:1
+  rgba(32, 80, 96, 100));
+}
+
+* {
+  font-family: &quot;Segoe UI&quot;;
+  font-size: 11pt;
+}
+
+QLabel { color: black; }
+
+#logoLabel {
+  color: green;
+  font-size: 14pt;
+  font-weight: bold;
+}
+
+#tempFrame { background-color: #FF7F50; }
+#humidFrame { background-color: #1E90FF; }
+#lightFrame { background-color: #FFD700; }
+
+#tempFrame, #humidFrame, #lightFrame {
+  border-width: 0px;
+  border-radius: 6px;
+}
+
+QFrame#tempFrame QLabel,
+QFrame#humidFrame QLabel,
+QFrame#lightFrame QLabel {
+  color: white;
+  font-weight: bold;
+  font-size: 8pt
+}
+
+#tempValLabel, #humidValLabel, #lightValLabel { font-size: 10pt }
+
+#lightButton, #pumpButton {
+  color: white;
+  background-color: #4CAF50;
+  text-align: center;
+  icon-size: 24px 24px;
+  font-size: 8pt;
+  font-weight: bold;
+  border-width: 0px;
+  border-radius: 6px;
+}
+
+QSlider::groove:horizontal {
+  height: 8px;
+  background: #ccc;
+  border-radius: 4px;
+}
+
+QSlider::handle:horizontal {
+  background: #4CAF50;
+  border: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  margin: -6px 0;
+}
+
+QSlider::sub-page:horizontal {
+  background: #4CAF50;
+  border-radius: 4px;
+}
