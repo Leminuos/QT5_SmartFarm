@@ -3,14 +3,14 @@
 
 #include <QMainWindow>
 
-#include "light_sensor.h"
-#include "temperature_humidity_sensor.h"
-#include "gpio.h"
+#include "drivers/light_sensor.h"
+#include "drivers/temperature_humidity_sensor.h"
+#include "drivers/gpio.h"
+#include "network/mqttclient.h"
 
 #include <QTimer>
 #include <QFile>
 #include <QDebug>
-#include "mqttclient.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

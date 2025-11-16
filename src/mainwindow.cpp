@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "./ui_mainwindow.h"
+#include "ui_mainwindow.h"
 
 #define LIGHT_SENSOR_DEVICE_PATH                "/dev/i2c-1"
 #define LIGHT_SENSOR_DEVICE_ADDRESS             0x23

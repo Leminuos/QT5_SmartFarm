@@ -2,8 +2,8 @@
 
 #include <QApplication>
 
-#include "light_sensor.h"
-#include "temperature_humidity_sensor.h"
+#include "drivers/light_sensor.h"
+#include "drivers/temperature_humidity_sensor.h"
 
 int main(int argc, char *argv[])
 {

@@ -1,4 +1,4 @@
-#include "temperature_humidity_sensor.h"
+#include "drivers/temperature_humidity_sensor.h"
 
 #include <stdio.h>
 #include <stdlib.h>

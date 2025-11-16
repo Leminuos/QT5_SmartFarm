@@ -1,4 +1,4 @@
-#include "gpio.h"
+#include "drivers/gpio.h"
 
 int Gpio::init(std::string consumerName, std::string chipName, int line)
 {

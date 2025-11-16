@@ -11,56 +11,43 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# QtCreator supports the following variables for Android, which are identical to qmake Android variables.
-# Check http://doc.qt.io/qt-5/deployment-android.html for more information.
-# They need to be set before the find_package(Qt5 ...) call.
-
-#if(ANDROID)
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-#    if (ANDROID_ABI STREQUAL "armeabi-v7a")
-#        set(ANDROID_EXTRA_LIBS
-#            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libcrypto.so
-#            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libssl.so)
-#    endif()
-#endif()
-
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
+file(GLOB_RECURSE SRC_FILES
+  "${CMAKE_SOURCE_DIR}/src/*.cpp"
+)
+
+file(GLOB_RECURSE HDR_FILES
+  "${CMAKE_SOURCE_DIR}/include/*.h"
+)
+
+set(RESOURCES
+  resources/resources.qrc
+)
+
+set(UI_FILES
+  src/mainwindow.ui
+)
+
 if(ANDROID)
-  add_library(QT5_SmartFarm SHARED
-    main.cpp
-    mainwindow.cpp
-    mainwindow.h
-    mainwindow.ui
-    light_sensor.cpp
-    light_sensor.h
-    temperature_humidity_sensor.cpp
-    temperature_humidity_sensor.h
-    gpio.cpp
-    gpio.h
-    mqttclient.cpp
-    mqttclient.h
+  add_library(${PROJECT_NAME} SHARED
+    ${SRC_FILES}
+    ${HDR_FILES}
+    ${RESOURCES}
+    ${UI_FILES}
   )
 else()
-  add_executable(QT5_SmartFarm
-    main.cpp
-    mainwindow.cpp
-    mainwindow.h
-    mainwindow.ui
-    light_sensor.cpp
-    light_sensor.h
-    temperature_humidity_sensor.cpp
-    temperature_humidity_sensor.h
-    gpio.cpp
-    gpio.h
-    mqttclient.cpp
-    mqttclient.h
-    resources.qrc
+  add_executable(${PROJECT_NAME}
+    ${SRC_FILES}
+    ${HDR_FILES}
+    ${RESOURCES}
+    ${UI_FILES}
   )
 endif()
 
 find_library(MOSQUITTO_LIB mosquitto PATHS ${CMAKE_SYSROOT}/usr/lib)
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Widgets ${MOSQUITTO_LIB} gpiod)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 set(INSTALL_DESTDIR "/opt")
 

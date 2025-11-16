@@ -1,4 +1,4 @@
-#include "mqttclient.h"
+#include "network/mqttclient.h"
 #include <QDebug>
 
 MqttClient::MqttClient(QObject *parent)
