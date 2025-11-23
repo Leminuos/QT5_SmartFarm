@@ -37,7 +37,7 @@ int MainWindow::init()
         return -1;
     }
 
-    ret = mLightGpio.init("light", "gpiochip2", 2); /* P8_7 pin */
+    ret = mLightGpio.init("light", "gpiochip1", 2); /* P8_7 pin */
     if (ret < 0)
     {
         printf("Failed to init light GPIO\n");
@@ -45,11 +45,11 @@ int MainWindow::init()
     } 
     else 
     {
-        mLightGpio.setState(GPIO_LOW);
+        mLightGpio.setState(GPIO_HIGH);
         ui->lightButton->setStyleSheet("background-color: #9E9E9E;");
     }
 
-    ret = mPumpGpio.init("pump", "gpiochip2", 3); /* P8_8 pin */
+    ret = mPumpGpio.init("pump", "gpiochip1", 3); /* P8_8 pin */
     if (ret < 0)
     {
         printf("Failed to init pump GPIO\n");
@@ -57,7 +57,7 @@ int MainWindow::init()
     }
     else 
     {
-        mPumpGpio.setState(GPIO_LOW);
+        mPumpGpio.setState(GPIO_HIGH);
         ui->pumpButton->setStyleSheet("background-color: #9E9E9E;");
     }
 
@@ -67,19 +67,16 @@ int MainWindow::init()
         client.subscribeTopic("control/led");
         client.subscribeTopic("control/pump");
 
-        int state = mLightGpio.getState();
         client.publishMessage(
             "state/led",
-            QByteArray::number(state),
+            "0",
             0,
             true
         );
 
-        state = mPumpGpio.getState();
-
         client.publishMessage(
             "state/pump",
-            QByteArray::number(state),
+            "0",
             0,
             true
         );
@@ -154,10 +151,10 @@ void MainWindow::onToggleLight(void)
     if (state == GPIO_HIGH)
     {
         mLightGpio.setState(GPIO_LOW);
-        ui->lightButton->setStyleSheet("background-color: #9E9E9E;");
+        ui->lightButton->setStyleSheet("background-color: #4CAF50;");
         client.publishMessage(
             "state/led",
-            "0",
+            "1",
             0,
             true
         );
@@ -165,10 +162,10 @@ void MainWindow::onToggleLight(void)
     else
     {
         mLightGpio.setState(GPIO_HIGH);
-        ui->lightButton->setStyleSheet("background-color: #4CAF50;");
+        ui->lightButton->setStyleSheet("background-color: #9E9E9E;");
         client.publishMessage(
             "state/led",
-            "1",
+            "0",
             0,
             true
         );
@@ -182,10 +179,10 @@ void MainWindow::onTogglePump(void)
     if (state == GPIO_HIGH)
     {
         mPumpGpio.setState(GPIO_LOW);
-        ui->pumpButton->setStyleSheet("background-color: #9E9E9E;");
+        ui->pumpButton->setStyleSheet("background-color: #4CAF50;");
         client.publishMessage(
             "state/pump",
-            "0",
+            "1",
             0,
             true
         );
@@ -193,10 +190,10 @@ void MainWindow::onTogglePump(void)
     else
     {
         mPumpGpio.setState(GPIO_HIGH);
-        ui->pumpButton->setStyleSheet("background-color: #4CAF50;");
+        ui->pumpButton->setStyleSheet("background-color: #9E9E9E;");
         client.publishMessage(
             "state/pump",
-            "1",
+            "0",
             0,
             true
         );
