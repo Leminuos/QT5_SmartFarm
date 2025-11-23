@@ -26,6 +26,8 @@ public:
                         bool retain = false);
 
     void subscribeTopic(const QString &topic, int qos = 0);
+    
+    bool isConnected(void);
 
 signals:
     void connected();
@@ -42,6 +44,7 @@ private:
     QString m_host;
     int m_port;
     int m_keepalive;
+    bool m_isConnected;
 
     static void on_connect(struct mosquitto *mosq, void *userdata, int rc);
     static void on_disconnect(struct mosquitto *mosq, void *userdata, int rc);

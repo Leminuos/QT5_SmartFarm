@@ -100,6 +100,8 @@ int MainWindow::init()
     QObject::connect(&mReadSensorDataTimer, &QTimer::timeout, [&]() {
         TemperatureHumiditySensor::CelsiusHumidityValue celsiusHumidityValue;
         int luxValue;
+        
+        if (!client.isConnected()) return;
 
         luxValue = mLightSensor.readLuxValue();
         celsiusHumidityValue = mTemperatureHumiditySensor.readCelsiusHumidityValue();

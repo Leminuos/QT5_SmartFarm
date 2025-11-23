@@ -5,7 +5,8 @@ MqttClient::MqttClient(QObject *parent)
     : QObject(parent),
       m_mosq(nullptr),
       m_port(1883),
-      m_keepalive(60)
+      m_keepalive(60),
+      m_isConnected(0)
 {
     // Khởi tạo thư viện mosquitto
     mosquitto_lib_init();
@@ -20,6 +21,8 @@ MqttClient::MqttClient(QObject *parent)
     mosquitto_connect_callback_set(m_mosq, &MqttClient::on_connect);
     mosquitto_disconnect_callback_set(m_mosq, &MqttClient::on_disconnect);
     mosquitto_message_callback_set(m_mosq, &MqttClient::on_message);
+    
+    mosquitto_reconnect_delay_set(m_mosq, 2, 30, true); 
 
     // Timer để gọi mosquitto_loop()
     connect(&m_loopTimer, &QTimer::timeout, this, &MqttClient::processLoop);
@@ -74,6 +77,18 @@ void MqttClient::disconnectFromHost()
     }
 }
 
+bool MqttClient::isConnected()
+{
+    if (!m_isConnected && m_mosq)
+    {
+        qDebug() << "Retry MQTT connect...";
+        mosquitto_reconnect_async(m_mosq);
+        return false;
+    }
+    
+    return true;
+}
+
 void MqttClient::publishMessage(const QString &topic,
                                 const QByteArray &payload,
                                 int qos,
@@ -121,7 +136,7 @@ void MqttClient::processLoop()
 
     int rc = mosquitto_loop(m_mosq, 0, 1);
 
-    if (rc != MOSQ_ERR_SUCCESS && rc != MOSQ_ERR_NO_CONN)
+    if (rc != MOSQ_ERR_SUCCESS)
     {
         emit errorOccurred(QString("mosquitto_loop() error: %1").arg(mosquitto_strerror(rc)));
 
@@ -142,10 +157,12 @@ void MqttClient::on_connect(struct mosquitto *mosq, void *userdata, int rc)
     if (rc == 0)
     {
         qDebug() << "MQTT connected";
+        self->m_isConnected = true;
         emit self->connected();
     }
     else
     {
+        self->m_isConnected = false;
         emit self->errorOccurred(QString("MQTT connect failed, rc=%1").arg(rc));
     }
 }
@@ -157,6 +174,7 @@ void MqttClient::on_disconnect(struct mosquitto *mosq, void *userdata, int rc)
     if (!self) return;
 
     qDebug() << "MQTT disconnected, rc=" << rc;
+    self->m_isConnected = false;
     emit self->disconnected(rc);
 }
 
